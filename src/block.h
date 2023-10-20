@@ -3,15 +3,16 @@
 #include <map>
 #include "position.h"
 
+using namespace std;
+
 class Block
 {
 public:
     Block();
     int id;
-    void Initialize();
-    void Print();
-    void Draw();
-    int grid[20][10];
+    map<int, vector<Position>> cells;
 
 private:
+    int cellSize;
+    int rotationState;
 }

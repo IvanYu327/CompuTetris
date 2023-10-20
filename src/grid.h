@@ -14,7 +14,6 @@ public:
     int grid[20][10];
 
 private:
-    vector<Color> GetCellColors();
     int numRows;
     int numCols;
     int cellSize;
