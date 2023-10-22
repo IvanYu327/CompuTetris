@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include "grid.h"
+#include "blocks.cpp"
 
 int main()
 {
@@ -9,17 +10,17 @@ int main()
     Color darkBlue = {44, 44, 127, 255};
 
     Grid grid = Grid();
-    grid.grid[0][0] = 1;
-    grid.grid[3][5] = 4;
-    grid.grid[9][9] = 7;
     grid.Print();
+
+    LBlock block = LBlock();
 
     while (WindowShouldClose() == false)
     {
         BeginDrawing();
         ClearBackground(darkBlue);
-
         grid.Draw();
+
+        block.Draw();
 
         EndDrawing();
     }
