@@ -39,3 +39,18 @@ vector<Position> Block::GetCellPositions()
     }
     return movedTiles;
 }
+
+void Block::RotateCW()
+{
+    rotationState = (rotationState + 1) % 4;
+}
+
+void Block::RotateCCW()
+{
+    rotationState = (rotationState + 3) % 4;
+}
+
+void Block::Rotate180()
+{
+    rotationState = (rotationState + 2) % 4;
+}

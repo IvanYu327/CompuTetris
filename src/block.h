@@ -13,6 +13,9 @@ public:
     void Draw();
     void Move(int rows, int columns);
     vector<Position> GetCellPositions();
+    void RotateCW();
+    void RotateCCW();
+    void Rotate180();
     int id;
     map<int, vector<Position>> cells;
 
