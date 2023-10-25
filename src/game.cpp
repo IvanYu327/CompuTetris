@@ -6,7 +6,11 @@ using namespace std;
 Game::Game()
 {
     grid = Grid();
+
     blocks = GetAllBlocks();
+
+    gameOver = false;
+    score = 0;
 
     currentBlock = LBlock(); // GetRandomBlock();
     for (int i = 0; i < 5; i++)
@@ -38,6 +42,12 @@ void Game::Draw()
 void Game::HandleInput()
 {
     int keyPressed = GetKeyPressed();
+
+    if (gameOver && keyPressed == KEY_R)
+    {
+        Reset();
+    }
+
     switch (keyPressed)
     {
     case KEY_LEFT:
@@ -71,23 +81,83 @@ void Game::HandleInput()
 
 void Game::MoveBlockLeft()
 {
+    if (gameOver)
+        return;
+
     currentBlock.Move(0, -1);
-    if (IsBlockOutside())
+    if (IsBlockOutside() || !BlockFits())
         currentBlock.Move(0, 1);
 }
 
 void Game::MoveBlockRight()
 {
+    if (gameOver)
+        return;
+
     currentBlock.Move(0, 1);
-    if (IsBlockOutside())
+    if (IsBlockOutside() || !BlockFits())
         currentBlock.Move(0, -1);
 }
 
 void Game::MoveBlockDown()
 {
+    if (gameOver)
+        return;
+
     currentBlock.Move(1, 0);
-    if (IsBlockOutside())
+    if (IsBlockOutside() || !BlockFits())
+    {
         currentBlock.Move(-1, 0);
+        LockBlock();
+    }
+}
+
+void Game::RotateBlockCW()
+{
+    if (gameOver)
+        return;
+
+    currentBlock.RotateCW();
+    if (IsBlockOutside() || !BlockFits())
+        currentBlock.RotateCCW();
+}
+
+void Game::RotateBlockCCW()
+{
+    if (gameOver)
+        return;
+
+    currentBlock.RotateCCW();
+    if (IsBlockOutside() || !BlockFits())
+        currentBlock.RotateCW();
+}
+
+void Game::RotateBlock180()
+{
+    if (gameOver)
+        return;
+
+    currentBlock.Rotate180();
+    if (IsBlockOutside() || !BlockFits())
+        currentBlock.Rotate180();
+}
+
+void Game::LockBlock()
+{
+    vector<Position> tiles = currentBlock.GetCellPositions();
+    for (Position item : tiles)
+    {
+        grid.grid[item.row][item.column] = currentBlock.id;
+    }
+
+    currentBlock = nextBlocks[0];
+    if (!BlockFits())
+        gameOver = true;
+
+    nextBlocks.erase(nextBlocks.begin());
+    nextBlocks.emplace_back(GetRandomBlock());
+
+    int rowsCleared = grid.ClearFullRows();
 }
 
 bool Game::IsBlockOutside()
@@ -101,23 +171,23 @@ bool Game::IsBlockOutside()
     return false;
 }
 
-void Game::RotateBlockCW()
+bool Game::BlockFits()
 {
-    currentBlock.RotateCW();
-    if (IsBlockOutside())
-        currentBlock.RotateCCW();
+    vector<Position> tiles = currentBlock.GetCellPositions();
+    for (Position item : tiles)
+    {
+        if (!grid.IsCellEmpty(item.row, item.column))
+            return false;
+    }
+    return true;
 }
 
-void Game::RotateBlockCCW()
+void Game::Reset()
 {
-    currentBlock.RotateCCW();
-    if (IsBlockOutside())
-        currentBlock.RotateCW();
-}
-
-void Game::RotateBlock180()
-{
-    currentBlock.Rotate180();
-    if (IsBlockOutside())
-        currentBlock.Rotate180();
+    grid.Initialize();
+    blocks = GetAllBlocks();
+    currentBlock = GetRandomBlock();
+    for (int i = 0; i < 5; i++)
+        nextBlocks.emplace_back(GetRandomBlock());
+    score = 0;
 }
