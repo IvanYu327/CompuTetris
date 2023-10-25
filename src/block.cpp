@@ -1,11 +1,15 @@
 #include "block.h"
 #include <vector>
+#include "constants.h"
 
 using namespace std;
 
 Block::Block()
 {
-    cellSize = 30;
+    cellSize = CONSTANTS::CELL_SIZE;
+    drawXOffset = CONSTANTS::DRAW_GRID_X_OFFSET;
+    drawYOffset = CONSTANTS::DRAW_GRID_Y_OFFSET;
+
     rotationState = 0;
     colors = GetCellColors();
     rowOffset = 0;
@@ -17,7 +21,7 @@ void Block::Draw()
     vector<Position> tiles = GetCellPositions();
     for (Position item : tiles)
     {
-        DrawRectangle(item.column * cellSize + 1, item.row * cellSize + 1, cellSize - 1, cellSize - 1, colors[id]);
+        DrawRectangle(item.column * cellSize + drawXOffset + 1, item.row * cellSize + drawYOffset + 1, cellSize - 1, cellSize - 1, colors[id]);
     }
 }
 

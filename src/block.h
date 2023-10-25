@@ -21,6 +21,8 @@ public:
 
 private:
     int cellSize;
+    int drawXOffset;
+    int drawYOffset;
     int rotationState;
     vector<Color> colors;
     int rowOffset;

@@ -1,14 +1,19 @@
 #include "grid.h"
 #include <iostream>
 #include "colors.h"
+#include "constants.h"
 
 using namespace std;
 
 Grid::Grid()
 {
+    cellSize = CONSTANTS::CELL_SIZE;
+    drawXOffset = CONSTANTS::DRAW_GRID_X_OFFSET;
+    drawYOffset = CONSTANTS::DRAW_GRID_Y_OFFSET;
+
     numRows = 20;
     numCols = 10;
-    cellSize = 30;
+
     Initialize();
     colors = GetCellColors();
 }
@@ -44,7 +49,7 @@ void Grid::Draw()
         {
             int cellValue = grid[row][column];
             Color cellColor = colors[cellValue];
-            DrawRectangle(column * cellSize + 1, row * cellSize + 1, cellSize - 1, cellSize - 1, cellColor);
+            DrawRectangle(column * cellSize + drawXOffset + 1, row * cellSize + drawYOffset + 1, cellSize - 1, cellSize - 1, cellColor);
         }
     }
 }

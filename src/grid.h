@@ -23,5 +23,7 @@ private:
     int numRows;
     int numCols;
     int cellSize;
+    int drawXOffset;
+    int drawYOffset;
     vector<Color> colors;
 };

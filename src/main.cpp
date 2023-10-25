@@ -17,7 +17,7 @@ bool EventTriggered(double interval)
 int main()
 {
     Color darkBlue = {44, 44, 127, 255};
-    InitWindow(300, 600, "CompuTetris");
+    InitWindow(500, 620, "CompuTetris");
     SetTargetFPS(60);
 
     Game game = Game();
