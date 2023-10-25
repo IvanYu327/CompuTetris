@@ -42,15 +42,15 @@ vector<Position> Block::GetCellPositions()
 
 void Block::RotateCW()
 {
-    rotationState = (rotationState + 1) % 4;
+    rotationState = (rotationState + 1) % cells.size();
 }
 
 void Block::RotateCCW()
 {
-    rotationState = (rotationState + 3) % 4;
+    rotationState = (rotationState + 3) % cells.size();
 }
 
 void Block::Rotate180()
 {
-    rotationState = (rotationState + 2) % 4;
+    rotationState = (rotationState + 2) % cells.size();
 }

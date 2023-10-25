@@ -44,9 +44,7 @@ void Game::HandleInput()
     int keyPressed = GetKeyPressed();
 
     if (gameOver && keyPressed == KEY_R)
-    {
         Reset();
-    }
 
     switch (keyPressed)
     {
@@ -187,6 +185,7 @@ void Game::Reset()
     grid.Initialize();
     blocks = GetAllBlocks();
     currentBlock = GetRandomBlock();
+    gameOver = false;
     for (int i = 0; i < 5; i++)
         nextBlocks.emplace_back(GetRandomBlock());
     score = 0;
