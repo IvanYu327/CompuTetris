@@ -4,12 +4,13 @@
 #include "constants.h"
 
 using namespace std;
+using namespace CONSTANTS;
 
 Grid::Grid()
 {
-    cellSize = CONSTANTS::CELL_SIZE;
-    drawXOffset = CONSTANTS::DRAW_GRID_X_OFFSET;
-    drawYOffset = CONSTANTS::DRAW_GRID_Y_OFFSET;
+    cellSize = CELL_SIZE;
+    drawXOffset = DRAW_GRID_X_OFFSET;
+    drawYOffset = DRAW_GRID_Y_OFFSET;
 
     numRows = 20;
     numCols = 10;
@@ -21,12 +22,8 @@ Grid::Grid()
 void Grid::Initialize()
 {
     for (int row = 0; row < numRows; row++)
-    {
         for (int column = 0; column < numCols; column++)
-        {
             grid[row][column] = 0;
-        }
-    }
 }
 
 void Grid::Print()
@@ -34,9 +31,7 @@ void Grid::Print()
     for (int row = 0; row < numRows; row++)
     {
         for (int column = 0; column < numCols; column++)
-        {
             cout << grid[row][column] << " ";
-        }
         cout << endl;
     }
 }
@@ -44,14 +39,12 @@ void Grid::Print()
 void Grid::Draw()
 {
     for (int row = 0; row < numRows; row++)
-    {
         for (int column = 0; column < numCols; column++)
         {
             int cellValue = grid[row][column];
             Color cellColor = colors[cellValue];
             DrawRectangle(column * cellSize + drawXOffset + 1, row * cellSize + drawYOffset + 1, cellSize - 1, cellSize - 1, cellColor);
         }
-    }
 }
 
 bool Grid::IsCellOutside(int row, int column)

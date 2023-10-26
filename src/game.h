@@ -8,31 +8,47 @@ class Game
 {
 public:
     Game();
-    Grid grid;
+    ~Game();
+
     bool gameOver;
-    vector<Block> blocks;
     int score;
-    Block GetRandomBlock();
+
     void Draw();
     void HandleInput();
+    void MoveBlockDown(); // TODO MAKE A GRAVITY
 
-    void MoveBlockLeft();
-    void MoveBlockRight();
-    void MoveBlockDown();
+    Music music;
 
 private:
-    bool IsBlockOutside();
+    Grid grid;
+    void Reset();
 
+    // Movement
+    void MoveBlockLeft();
+    void MoveBlockRight();
+
+    // Rotation
     void RotateBlockCW();
     void RotateBlockCCW();
     void RotateBlock180();
 
-    void LockBlock();
-    bool BlockFits();
-
-    void Reset();
-
-    vector<Block> GetAllBlocks();
+    // Block selection
     Block currentBlock;
     vector<Block> nextBlocks;
+
+    vector<Block> blocks;
+    vector<Block> GetAllBlocks();
+    Block GetRandomBlock();
+    void LockBlock();
+
+    // Checks
+    bool IsBlockOutside();
+    bool BlockFits();
+
+    // Other
+    void UpdateScore(int linesCleared, int moveDownPoints);
+
+    // Sounds
+    Sound rotateSound;
+    Sound clearSound;
 };
