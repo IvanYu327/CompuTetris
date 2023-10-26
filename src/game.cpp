@@ -18,10 +18,10 @@ Game::Game()
 
     // Load music and sounds
     InitAudioDevice();
-    music = LoadMusicStream("src/sounds/music.mp3");
+    music = LoadMusicStream("sounds/music.mp3");
     PlayMusicStream(music);
-    rotateSound = LoadSound("src/sounds/rotate.mp3");
-    clearSound = LoadSound("src/sounds/clear.mp3");
+    rotateSound = LoadSound("sounds/rotate.mp3");
+    clearSound = LoadSound("sounds/clear.mp3");
 }
 
 Game::~Game()
@@ -73,9 +73,6 @@ void Game::HandleInput()
 {
     int keyPressed = GetKeyPressed();
 
-    if (gameOver && keyPressed == KEY_R)
-        Reset();
-
     switch (keyPressed)
     {
     case KEY_LEFT:
@@ -103,6 +100,9 @@ void Game::HandleInput()
         RotateBlock180();
         break;
 
+    case KEY_R:
+        Reset();
+        break;
     default:
         break;
     }
