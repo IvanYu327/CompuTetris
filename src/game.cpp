@@ -54,7 +54,9 @@ vector<Block> Game::GetAllBlocks()
 void Game::Draw()
 {
     grid.Draw();
-    currentBlock.Draw();
+
+    if (!gameOver)
+        currentBlock.Draw();
 
     Block nextBlock = nextBlocks[0];
 
@@ -110,6 +112,12 @@ void Game::HandleInput()
     bool movingLeft = IsKeyDown(KEY_LEFT) && moveLeft;
     bool movingRight = IsKeyDown(KEY_RIGHT) && moveRight;
 
+    if (!movingLeft && !movingRight)
+    {
+        dasTimer = 0.0f;
+        arrTimer = 0.0f;
+    }
+
     // Handle left movement using DAS
     if (movingLeft)
     {
@@ -120,7 +128,7 @@ void Game::HandleInput()
             int timesToMove = floor(arrTimer / ARR_DELAY);
 
             if (ARR_DELAY == 0)
-                MoveBlockLeft(50);
+                MoveBlockLeft(10);
             else
                 MoveBlockLeft(timesToMove);
 
@@ -143,7 +151,7 @@ void Game::HandleInput()
             int timesToMove = floor(arrTimer / ARR_DELAY);
 
             if (ARR_DELAY == 0)
-                MoveBlockRight(50);
+                MoveBlockRight(10);
             else
                 MoveBlockRight(timesToMove);
 
@@ -166,7 +174,7 @@ void Game::MoveBlockLeft(int count)
     if (gameOver)
         return;
 
-    for (int i = 0; i <= count; i++)
+    for (int i = 0; i < count; i++)
     {
         currentBlock.Move(0, -1);
         if (IsBlockOutside() || !BlockFits())
@@ -182,7 +190,7 @@ void Game::MoveBlockRight(int count)
     if (gameOver)
         return;
 
-    for (int i = 0; i <= count; i++)
+    for (int i = 0; i < count; i++)
     {
         currentBlock.Move(0, 1);
         if (IsBlockOutside() || !BlockFits())
