@@ -5,14 +5,14 @@
 
 using namespace std;
 
-class SRSRotation
+class RotationSystem
 {
 public:
-    SRSRotation();
+    RotationSystem();
     vector<pair<int, int>> GetRotationTests(int block, int start, int end);
 
 private:
-    map<pair<int, int>, vector<pair<int, int>>> normalWallKickData;
-    map<pair<int, int>, vector<pair<int, int>>> iWallKickData;
+    map<pair<int, int>, vector<pair<int, int>>> SRS_JLSZTO_WallKickData;
+    map<pair<int, int>, vector<pair<int, int>>> SRS_I_WallKickData;
     void Initialize();
 };
