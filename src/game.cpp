@@ -18,10 +18,10 @@ Game::Game()
 
     // Load music and sounds
     InitAudioDevice();
-    music = LoadMusicStream("sounds/music.mp3");
+    music = LoadMusicStream("src/sounds/music.mp3");
     PlayMusicStream(music);
-    rotateSound = LoadSound("sounds/rotate.mp3");
-    clearSound = LoadSound("sounds/clear.mp3");
+    rotateSound = LoadSound("src/sounds/rotate.mp3");
+    clearSound = LoadSound("src/sounds/clear.mp3");
 }
 
 Game::~Game()
@@ -88,6 +88,10 @@ void Game::HandleInput()
         UpdateScore(0, 10);
         break;
 
+    case KEY_SPACE:
+        HardDrop();
+        break;
+
     case KEY_UP:
         RotateBlockCW();
         break;
@@ -139,6 +143,24 @@ void Game::MoveBlockDown()
         currentBlock.Move(-1, 0);
         LockBlock();
     }
+}
+
+void Game::HardDrop()
+{
+    if (gameOver)
+        return;
+
+    int blocksMoved = 0;
+    while (!IsBlockOutside() && BlockFits())
+    {
+        currentBlock.Move(1, 0);
+        blocksMoved++;
+    }
+
+    blocksMoved--;
+    currentBlock.Move(-1, 0);
+    LockBlock();
+    UpdateScore(0, blocksMoved * 10);
 }
 
 void Game::RotateBlockCW()

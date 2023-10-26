@@ -23,7 +23,7 @@ int main()
     InitWindow(500, 620, "ComputeTris");
     SetTargetFPS(60);
 
-    Font font = LoadFontEx("fonts/monogram.ttf", 64, 0, 0);
+    Font font = LoadFontEx("src/fonts/monogram.ttf", 64, 0, 0);
 
     Game game = Game();
 

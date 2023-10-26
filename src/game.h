@@ -26,6 +26,7 @@ private:
     // Movement
     void MoveBlockLeft();
     void MoveBlockRight();
+    void HardDrop();
 
     // Rotation
     void RotateBlockCW();
