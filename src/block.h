@@ -16,6 +16,7 @@ public:
 
     // Move and rotate
     void Move(int rows, int columns);
+    void Reset();
     vector<Position> GetCellPositions();
     void RotateWithKick(int times, int rowOffset = 0, int columnOffset = 0);
 

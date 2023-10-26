@@ -33,6 +33,26 @@ void Block::Move(int rows, int columns)
     columnOffset += columns;
 }
 
+void Block::Reset()
+{
+    rowOffset = 0;
+    columnOffset = 0;
+    rotationState = 0;
+
+    switch (id)
+    {
+    case 1:
+        Move(-1, 3);
+        break;
+    case 4:
+        Move(0, 4);
+        break;
+    default:
+        Move(0, 3);
+        break;
+    }
+}
+
 vector<Position> Block::GetCellPositions()
 {
     vector<Position> tiles = cells[rotationState];
