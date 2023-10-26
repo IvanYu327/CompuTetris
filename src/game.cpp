@@ -15,7 +15,15 @@ Game::Game()
     gameOver = false;
     score = 0;
 
+    // Init movement flags
+    dasTimer = 0.0f;
+    arrTimer = 0.0f;
+    moveLeft = false;
+    moveRight = false;
+    held = false;
+
     currentBlock = GetRandomBlock();
+    holdBlock = nullptr;
     for (int i = 0; i < 5; i++)
         nextBlocks.emplace_back(GetRandomBlock());
 
@@ -29,6 +37,7 @@ Game::Game()
 
 Game::~Game()
 {
+    delete holdBlock;
     UnloadSound(rotateSound);
     UnloadSound(clearSound);
     UnloadMusicStream(music);
@@ -60,17 +69,23 @@ void Game::Draw()
 
     Block nextBlock = nextBlocks[0];
 
-    switch (nextBlock.id)
+    // holdBlock->Draw(50, 50);
+
+    for (int i = 0; i < 5; i++)
     {
-    case 1:
-        nextBlock.Draw(255, 290);
-        break;
-    case 4:
-        nextBlock.Draw(255, 280);
-        break;
-    default:
-        nextBlock.Draw(270, 270);
-        break;
+        Block nextBlock = nextBlocks[i];
+        switch (nextBlock.id)
+        {
+        case 1:
+            nextBlock.Draw(255, 100 * i + 290);
+            break;
+        case 4:
+            nextBlock.Draw(255, 100 * i + 280);
+            break;
+        default:
+            nextBlock.Draw(270, 100 * i + 270);
+            break;
+        }
     }
 }
 
@@ -107,6 +122,8 @@ void Game::HandleInput()
         Reset();
     if (keyPressed == KEY_DOWN)
         SoftDrop();
+    if (keyPressed == KEY_C)
+        Hold();
 
     // Check if a movement key is currently pressed
     bool movingLeft = IsKeyDown(KEY_LEFT) && moveLeft;
@@ -282,6 +299,26 @@ void Game::RotateBlock(int times)
     }
 }
 
+void Game::Hold()
+{
+    if (held == true)
+        return;
+
+    if (holdBlock == nullptr)
+    {
+        *holdBlock = currentBlock;
+        currentBlock = nextBlocks[0];
+        nextBlocks.erase(nextBlocks.begin());
+        nextBlocks.emplace_back(GetRandomBlock());
+    }
+    else
+    {
+        Block *temp = holdBlock;
+        *holdBlock = currentBlock;
+        currentBlock = *temp;
+    }
+}
+
 void Game::LockBlock()
 {
     vector<Position> tiles = currentBlock.GetCellPositions();
@@ -290,6 +327,8 @@ void Game::LockBlock()
         grid.grid[item.row][item.column] = currentBlock.id;
 
     currentBlock = nextBlocks[0];
+    held = false;
+
     if (!BlockFits())
         gameOver = true;
 

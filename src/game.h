@@ -29,16 +29,17 @@ private:
     const float DAS_DELAY = 0.110f; // Delayed Auto-Shift delay in seconds
 
     // Movement flags
-    float dasTimer = 0.0f; // Delayed Auto-Shift timer
-    float arrTimer = 0.0f; // Auto-Repeat Rate timer
-    bool moveLeft = false;
-    bool moveRight = false;
+    float dasTimer; // Delayed Auto-Shift timer
+    float arrTimer; // Auto-Repeat Rate timer
+    bool moveLeft;
+    bool moveRight;
 
     // Movement
     void MoveBlockLeft(int count = 1);
     void MoveBlockRight(int count = 1);
     void HardDrop();
     void SoftDrop();
+    void Hold();
 
     // Rotation
     void RotateBlock(int times);
@@ -46,6 +47,8 @@ private:
 
     // Block selection
     Block currentBlock;
+    Block *holdBlock;
+    bool held;
     vector<Block> nextBlocks;
 
     vector<Block> blocks;
