@@ -1,6 +1,7 @@
 #include "block.h"
 #include <vector>
 #include "constants.h"
+#include <iostream>
 
 using namespace std;
 using namespace CONSTANTS;
@@ -45,17 +46,10 @@ vector<Position> Block::GetCellPositions()
     return movedTiles;
 }
 
-void Block::RotateCW()
+void Block::RotateWithKick(int times, int rowOffset, int columnOffset)
 {
-    rotationState = (rotationState + 1) % cells.size();
-}
-
-void Block::RotateCCW()
-{
-    rotationState = (rotationState + 3) % cells.size();
-}
-
-void Block::Rotate180()
-{
-    rotationState = (rotationState + 2) % cells.size();
+    // cout
+    //     << rotationState << ">>" << (rotationState + times) % cells.size() << " " << columnOffset << " " << rowOffset << endl;
+    rotationState = (rotationState + times) % cells.size();
+    Move(rowOffset, columnOffset);
 }

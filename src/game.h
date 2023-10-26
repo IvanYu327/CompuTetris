@@ -1,6 +1,7 @@
 #pragma once
 #include "grid.h"
 #include "blocks.cpp"
+#include "rotationSystem.h"
 
 using namespace std;
 
@@ -40,9 +41,8 @@ private:
     void SoftDrop();
 
     // Rotation
-    void RotateBlockCW();
-    void RotateBlockCCW();
-    void RotateBlock180();
+    void RotateBlock(int times);
+    RotationSystem rotationSystem;
 
     // Block selection
     Block currentBlock;

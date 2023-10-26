@@ -18,5 +18,5 @@ const Color darkBlue = {44, 44, 127, 255};
 
 vector<Color> GetCellColors()
 {
-    return {darkGrey, cyan, purple, yellow, orange, blue, green, red};
+    return {darkGrey, cyan, blue, orange, yellow, green, purple, red};
 }

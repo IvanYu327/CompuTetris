@@ -10,6 +10,7 @@ Game::Game()
     grid = Grid();
 
     blocks = GetAllBlocks();
+    rotationSystem = RotationSystem();
 
     gameOver = false;
     score = 0;
@@ -47,7 +48,7 @@ Block Game::GetRandomBlock()
 
 vector<Block> Game::GetAllBlocks()
 {
-    return {IBlock(), TBlock(), OBlock(), LBlock(), JBlock(), SBlock(), ZBlock()};
+    return {IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()};
 }
 
 void Game::Draw()
@@ -59,7 +60,7 @@ void Game::Draw()
 
     switch (nextBlock.id)
     {
-    case 3:
+    case 1:
         nextBlock.Draw(255, 290);
         break;
     case 4:
@@ -94,11 +95,12 @@ void Game::HandleInput()
         arrTimer = 0.0f;
     }
     if (keyPressed == KEY_UP)
-        RotateBlockCW();
+        RotateBlock(1); // CW
     if (keyPressed == KEY_X)
-        RotateBlockCCW();
+        RotateBlock(3); // CCW
     if (keyPressed == KEY_Z)
-        RotateBlock180();
+        RotateBlock(2); // 180
+
     if (keyPressed == KEY_R)
         Reset();
     if (keyPressed == KEY_DOWN)
@@ -151,6 +153,11 @@ void Game::HandleInput()
         {
             dasTimer += GetFrameTime();
         }
+    }
+
+    if (dasTimer > 0)
+    {
+        cout << "DAS: " << dasTimer << " ARR: " << arrTimer << endl;
     }
 }
 
@@ -232,40 +239,39 @@ void Game::HardDrop()
     UpdateScore(0, blocksMoved * 10);
 }
 
-void Game::RotateBlockCW()
+void Game::RotateBlock(int times)
 {
     if (gameOver)
         return;
 
-    currentBlock.RotateCW();
-    if (IsBlockOutside() || !BlockFits())
-        currentBlock.RotateCCW();
-    else
-        PlaySound(rotateSound);
-}
+    // get rotation kick tests
+    int endState = (currentBlock.rotationState + times) % currentBlock.cells.size();
 
-void Game::RotateBlockCCW()
-{
-    if (gameOver)
-        return;
+    // cout << endl
+    //      << "attempting rotation " << currentBlock.rotationState << ">>" << endState << " id " << currentBlock.id << endl;
 
-    currentBlock.RotateCCW();
-    if (IsBlockOutside() || !BlockFits())
-        currentBlock.RotateCW();
-    else
-        PlaySound(rotateSound);
-}
+    // get rotation kick tests
+    vector<pair<int, int>> tests = rotationSystem.GetRotationTests(currentBlock.id, currentBlock.rotationState, endState);
 
-void Game::RotateBlock180()
-{
-    if (gameOver)
-        return;
+    for (auto test : tests)
+    {
+        const int columnOffset = test.first;
+        const int rowOffset = test.second;
 
-    currentBlock.Rotate180();
-    if (IsBlockOutside() || !BlockFits())
-        currentBlock.Rotate180();
-    else
-        PlaySound(rotateSound);
+        // cout << "trying test " << columnOffset << "  " << rowOffset << endl;
+        currentBlock.RotateWithKick(times, rowOffset, columnOffset);
+        if (IsBlockOutside() || !BlockFits())
+        {
+            currentBlock.RotateWithKick(-times, -rowOffset, -columnOffset);
+            // cout << "    failed" << endl;
+        }
+        else
+        {
+            // cout << "    success" << endl;
+            PlaySound(rotateSound);
+            return;
+        }
+    }
 }
 
 void Game::LockBlock()
