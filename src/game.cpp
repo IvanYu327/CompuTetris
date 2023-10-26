@@ -1,5 +1,7 @@
 #include "game.h"
 #include <random>
+#include <cmath>
+#include <iostream>
 
 using namespace std;
 
@@ -73,63 +75,115 @@ void Game::HandleInput()
 {
     int keyPressed = GetKeyPressed();
 
-    switch (keyPressed)
-    {
-    case KEY_LEFT:
-        MoveBlockLeft();
-        break;
-
-    case KEY_RIGHT:
-        MoveBlockRight();
-        break;
-
-    case KEY_DOWN:
-        MoveBlockDown();
-        UpdateScore(0, 10);
-        break;
-
-    case KEY_SPACE:
+    if (keyPressed == KEY_SPACE)
         HardDrop();
-        break;
-
-    case KEY_UP:
+    if (keyPressed == KEY_LEFT)
+    {
+        MoveBlockLeft();
+        moveLeft = true;
+        moveRight = false;
+        dasTimer = 0.0f;
+        arrTimer = 0.0f;
+    }
+    if (keyPressed == KEY_RIGHT)
+    {
+        MoveBlockRight();
+        moveRight = true;
+        moveLeft = false;
+        dasTimer = 0.0f;
+        arrTimer = 0.0f;
+    }
+    if (keyPressed == KEY_UP)
         RotateBlockCW();
-        break;
-
-    case KEY_X:
+    if (keyPressed == KEY_X)
         RotateBlockCCW();
-        break;
-
-    case KEY_Z:
+    if (keyPressed == KEY_Z)
         RotateBlock180();
-        break;
-
-    case KEY_R:
+    if (keyPressed == KEY_R)
         Reset();
-        break;
-    default:
-        break;
+    if (keyPressed == KEY_DOWN)
+        SoftDrop();
+
+    // Check if a movement key is currently pressed
+    bool movingLeft = IsKeyDown(KEY_LEFT) && moveLeft;
+    bool movingRight = IsKeyDown(KEY_RIGHT) && moveRight;
+
+    // Handle left movement using DAS
+    if (movingLeft)
+    {
+        // enter ARR
+        if (dasTimer >= DAS_DELAY)
+        {
+            arrTimer += GetFrameTime();
+            int timesToMove = floor(arrTimer / ARR_DELAY);
+
+            if (ARR_DELAY == 0)
+                MoveBlockLeft(50);
+            else
+                MoveBlockLeft(timesToMove);
+
+            arrTimer -= timesToMove * ARR_DELAY;
+        }
+        // Increment DAS Delay
+        else
+        {
+            dasTimer += GetFrameTime();
+        }
+    }
+
+    // Handle right movement using DAS
+    if (movingRight)
+    {
+        if (dasTimer >= DAS_DELAY)
+        {
+            arrTimer += GetFrameTime();
+
+            int timesToMove = floor(arrTimer / ARR_DELAY);
+
+            if (ARR_DELAY == 0)
+                MoveBlockRight(50);
+            else
+                MoveBlockRight(timesToMove);
+
+            arrTimer -= timesToMove * ARR_DELAY;
+        }
+        else
+        {
+            dasTimer += GetFrameTime();
+        }
     }
 }
 
-void Game::MoveBlockLeft()
+void Game::MoveBlockLeft(int count)
 {
     if (gameOver)
         return;
 
-    currentBlock.Move(0, -1);
-    if (IsBlockOutside() || !BlockFits())
-        currentBlock.Move(0, 1);
+    for (int i = 0; i <= count; i++)
+    {
+        currentBlock.Move(0, -1);
+        if (IsBlockOutside() || !BlockFits())
+        {
+            currentBlock.Move(0, 1);
+            break;
+        }
+    }
 }
 
-void Game::MoveBlockRight()
+void Game::MoveBlockRight(int count)
 {
     if (gameOver)
         return;
 
-    currentBlock.Move(0, 1);
-    if (IsBlockOutside() || !BlockFits())
-        currentBlock.Move(0, -1);
+    for (int i = 0; i <= count; i++)
+    {
+        currentBlock.Move(0, 1);
+        if (IsBlockOutside() || !BlockFits())
+        {
+            currentBlock.Move(0, -1);
+            break;
+        }
+    }
 }
 
 void Game::MoveBlockDown()
@@ -143,6 +197,21 @@ void Game::MoveBlockDown()
         currentBlock.Move(-1, 0);
         LockBlock();
     }
+}
+
+void Game::SoftDrop()
+{
+    if (gameOver)
+        return;
+
+    currentBlock.Move(1, 0);
+    if (IsBlockOutside() || !BlockFits())
+    {
+        currentBlock.Move(-1, 0);
+        LockBlock();
+    }
+    else
+        UpdateScore(0, 10);
 }
 
 void Game::HardDrop()

@@ -34,8 +34,8 @@ int main()
         game.HandleInput();
 
         // Gravity
-        if (EventTriggered(0.2))
-            game.MoveBlockDown();
+        // if (EventTriggered(0.5))
+        //     game.MoveBlockDown();
 
         BeginDrawing();
         ClearBackground(darkBlue);
