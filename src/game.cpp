@@ -69,7 +69,8 @@ void Game::Draw()
 
     Block nextBlock = nextBlocks[0];
 
-    // holdBlock->Draw(50, 50);
+    if (holdBlock != nullptr)
+        holdBlock->Draw(-50, 50);
 
     for (int i = 0; i < 5; i++)
     {
@@ -301,22 +302,21 @@ void Game::RotateBlock(int times)
 
 void Game::Hold()
 {
-    if (held == true)
+    if (held)
         return;
 
     if (holdBlock == nullptr)
     {
-        *holdBlock = currentBlock;
+        holdBlock = new Block(currentBlock); // Allocate and copy the currentBlock
         currentBlock = nextBlocks[0];
         nextBlocks.erase(nextBlocks.begin());
         nextBlocks.emplace_back(GetRandomBlock());
     }
     else
-    {
-        Block *temp = holdBlock;
-        *holdBlock = currentBlock;
-        currentBlock = *temp;
-    }
+        swap(currentBlock, *holdBlock);
+
+    held = true;
+    holdBlock->Reset();
 }
 
 void Game::LockBlock()

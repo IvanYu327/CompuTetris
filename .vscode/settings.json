@@ -11,6 +11,7 @@
   "files.associations": {
     "vector": "cpp",
     "ostream": "cpp",
-    "iostream": "cpp"
+    "iostream": "cpp",
+    "new": "cpp"
   }
 }

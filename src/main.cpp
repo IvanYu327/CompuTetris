@@ -20,7 +20,7 @@ int main()
 {
     Color darkBlue = {44, 44, 127, 255};
 
-    InitWindow(500, 620, "ComputeTris");
+    InitWindow(1000, 620, "ComputeTris");
     SetTargetFPS(60);
 
     Font font = LoadFontEx("src/fonts/monogram.ttf", 64, 0, 0);
