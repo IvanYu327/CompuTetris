@@ -41,21 +41,21 @@ int main()
         ClearBackground(darkBlue);
 
         // Draw score
-        char scoreText[10];
-        sprintf(scoreText, "%d", game.score);
-        Vector2 textSize = MeasureTextEx(font, scoreText, 38, 2);
+        // char scoreText[10];
+        // sprintf(scoreText, "%d", game.score);
+        // Vector2 textSize = MeasureTextEx(font, scoreText, 38, 2);
 
-        DrawTextEx(font, "Score", {365, 15}, 38, 2, WHITE);
-        DrawRectangleRounded({320, 55, 170, 60}, 0.3, 6, lightBlue);
-        DrawTextEx(font, scoreText, {320 + (170 - textSize.x) / 2, 65}, 38, 2, WHITE);
+        // DrawTextEx(font, "Score", {365, 15}, 38, 2, WHITE);
+        // DrawRectangleRounded({320, 55, 170, 60}, 0.3, 6, lightBlue);
+        // DrawTextEx(font, scoreText, {320 + (170 - textSize.x) / 2, 65}, 38, 2, WHITE);
 
         // Draw next queue
-        DrawTextEx(font, "Next", {370, 175}, 38, 2, WHITE);
-        DrawRectangleRounded({320, 215, 170, 180}, 0.3, 6, lightBlue);
+        // DrawTextEx(font, "Next", {370, 175}, 38, 2, WHITE);
+        // DrawRectangleRounded({320, 215, 170, 180}, 0.3, 6, lightBlue);
 
         // Game over text
-        if (game.gameOver)
-            DrawTextEx(font, "GAME OVER", {320, 450}, 32, 2, WHITE);
+        // if (game.gameOver)
+        //     DrawTextEx(font, "GAME OVER", {320, 450}, 32, 2, WHITE);
 
         game.Draw();
         EndDrawing();

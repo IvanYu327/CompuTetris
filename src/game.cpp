@@ -18,6 +18,7 @@ Game::Game()
     // Init movement flags
     dasTimer = 0.0f;
     arrTimer = 0.0f;
+    softDropTimer = 0.0f;
     moveLeft = false;
     moveRight = false;
     held = false;
@@ -30,7 +31,7 @@ Game::Game()
     // Load music and sounds
     InitAudioDevice();
     music = LoadMusicStream("src/sounds/music.mp3");
-    PlayMusicStream(music);
+    // PlayMusicStream(music);
     rotateSound = LoadSound("src/sounds/rotate.mp3");
     clearSound = LoadSound("src/sounds/clear.mp3");
 }
@@ -70,7 +71,20 @@ void Game::Draw()
     Block nextBlock = nextBlocks[0];
 
     if (holdBlock != nullptr)
-        holdBlock->Draw(-50, 50);
+    {
+        switch (holdBlock->id)
+        {
+        case 1:
+            holdBlock->Draw(DRAW_GRID_X_OFFSET - CELL_SIZE * 7.5, DRAW_GRID_Y_OFFSET + CELL_SIZE * 2);
+            break;
+        case 4:
+            holdBlock->Draw(DRAW_GRID_X_OFFSET - CELL_SIZE * 7, DRAW_GRID_Y_OFFSET + CELL_SIZE * 2);
+            break;
+        default:
+            holdBlock->Draw(DRAW_GRID_X_OFFSET - CELL_SIZE * 6.5, DRAW_GRID_Y_OFFSET + CELL_SIZE * 2);
+            break;
+        }
+    }
 
     for (int i = 0; i < 5; i++)
     {
@@ -78,13 +92,13 @@ void Game::Draw()
         switch (nextBlock.id)
         {
         case 1:
-            nextBlock.Draw(255, 100 * i + 290);
+            nextBlock.Draw(DRAW_GRID_X_OFFSET + CELL_SIZE * 7.5, CELL_SIZE * (i * 3 + 1));
             break;
         case 4:
-            nextBlock.Draw(255, 100 * i + 280);
+            nextBlock.Draw(DRAW_GRID_X_OFFSET + CELL_SIZE * 7.5, CELL_SIZE * (i * 3 + 1));
             break;
         default:
-            nextBlock.Draw(270, 100 * i + 270);
+            nextBlock.Draw(DRAW_GRID_X_OFFSET + CELL_SIZE * 8, CELL_SIZE * (i * 3 + 1));
             break;
         }
     }
@@ -129,6 +143,7 @@ void Game::HandleInput()
     // Check if a movement key is currently pressed
     bool movingLeft = IsKeyDown(KEY_LEFT) && moveLeft;
     bool movingRight = IsKeyDown(KEY_RIGHT) && moveRight;
+    bool movingDown = IsKeyDown(KEY_DOWN);
 
     if (!movingLeft && !movingRight)
     {
@@ -179,6 +194,25 @@ void Game::HandleInput()
         {
             dasTimer += GetFrameTime();
         }
+    }
+
+    // Handle holding softdrop
+    if (movingDown)
+    {
+        if (softDropTimer >= SOFT_DROP_DELAY)
+        {
+            softDropTimer += GetFrameTime();
+            int timesToMove = floor(softDropTimer / SOFT_DROP_DELAY);
+
+            if (SOFT_DROP_DELAY == 0)
+                SoftDrop(99999);
+            else
+                SoftDrop(timesToMove);
+
+            softDropTimer -= timesToMove * SOFT_DROP_DELAY;
+        }
+        else
+            softDropTimer += GetFrameTime();
     }
 
     if (dasTimer > 0)
@@ -232,19 +266,23 @@ void Game::MoveBlockDown()
     }
 }
 
-void Game::SoftDrop()
+void Game::SoftDrop(int count)
 {
     if (gameOver)
         return;
 
-    currentBlock.Move(1, 0);
-    if (IsBlockOutside() || !BlockFits())
+    for (int i = 0; i < count; i++)
     {
-        currentBlock.Move(-1, 0);
-        LockBlock();
+        currentBlock.Move(1, 0);
+        if (IsBlockOutside() || !BlockFits())
+        {
+            currentBlock.Move(-1, 0);
+            // LockBlock();
+            break;
+        }
+        else
+            UpdateScore(0, 10);
     }
-    else
-        UpdateScore(0, 10);
 }
 
 void Game::HardDrop()
@@ -369,6 +407,13 @@ void Game::Reset()
     grid.Initialize();
     blocks = GetAllBlocks();
     currentBlock = GetRandomBlock();
+
+    if (holdBlock != nullptr)
+    {
+        delete holdBlock;
+        holdBlock = nullptr;
+    }
+
     gameOver = false;
 
     for (int i = 0; i < 5; i++)

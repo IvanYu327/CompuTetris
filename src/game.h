@@ -25,12 +25,14 @@ private:
     void Reset();
 
     // Configs
-    const float ARR_DELAY = 0.0f;   // Auto-Repeat Rate delay in seconds
-    const float DAS_DELAY = 0.110f; // Delayed Auto-Shift delay in seconds
+    const float ARR_DELAY = 0.0f;       // Auto-Repeat Rate delay in seconds
+    const float DAS_DELAY = 0.110f;     // Delayed Auto-Shift delay in seconds
+    const float SOFT_DROP_DELAY = 0.0f; // Soft Drop delay in seconds
 
     // Movement flags
     float dasTimer; // Delayed Auto-Shift timer
     float arrTimer; // Auto-Repeat Rate timer
+    float softDropTimer;
     bool moveLeft;
     bool moveRight;
 
@@ -38,7 +40,7 @@ private:
     void MoveBlockLeft(int count = 1);
     void MoveBlockRight(int count = 1);
     void HardDrop();
-    void SoftDrop();
+    void SoftDrop(int count = 1);
     void Hold();
 
     // Rotation
