@@ -18,6 +18,7 @@ public:
     void RotateCW();
     void RotateCCW();
     void Rotate180();
+    void Rotate();
     int id;
     map<int, vector<Position>> cells;
 
